@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Using the scripts in web pages</title>
+    <meta charset="utf-8">
+    <script defer src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script defer src="js/latlon-spherical.js"></script>
+    <script defer src="js/dms.js"></script>
+    <script defer src="js/main.js"></script>
+</head>
+<body>
+
+    Selecione o filho que está indo buscar: <select id="schools"></select>
+    <br />
+    <input type="button" value="Selecionar escola" id="selectChild" onclick="chooseSchool();" />
+    <br />
+    <span id="infoAboutDistance"></span>
+    <br />
+    <input type="button" value="Cancelar busca" id="cancel" onclick="cancelChoose();" style="display:none;" />
+    <br />
+    <a href="#" id="externalMap" target="_blank" style="display:none;">Abrir link no google maps</a>
+</body>
+</html>
