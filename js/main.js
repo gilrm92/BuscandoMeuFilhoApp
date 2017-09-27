@@ -1,15 +1,34 @@
+var _controlHub;
+var _signalrConnection;
 var schools = [];
 var checkPosition;
+var _parentName = "Rodrigo Alves";
+var _parentDistance = "";
 
 $(document).ready(function () {
     prepareSchools();
     setSchools();
+    connect();
 });
 
+function connect() {
+    var checkersServerURL = "http://localhost:61301/";
+    var checkersHubURL = checkersServerURL + "signalRServer";
+
+    _signalrConnection = $.hubConnection(checkersHubURL, {
+        useDefaultPath: false
+    });
+
+    _controlHub = _signalrConnection.createHubProxy('ControlHub');
+    _signalrConnection.start();
+}
 
 function calculateDistance(posistionStart, positionEnd) {
     var distance = parseFloat(posistionStart.distanceTo(positionEnd).toPrecision(4));
     $('#infoAboutDistance').text("Distancia atual até seu filho: " + distance + " metros");
+    
+    _parentDistance = distance.toString();
+
     checkPosition = setTimeout(function () { keepCheckingPosition() } , 2000);
 }
 
@@ -64,6 +83,8 @@ function checkApproximationSchool(positionParent) {
 
     calculateDistance(positionParent, school[0].latlng);
     setGoogleMapsLink(positionParent, school[0].latlng);
+    _controlHub.invoke("SetParentOnWay", _parentName, _parentDistance, school[0].name);
+
     $('#selectChild').hide();
     $('#cancel').show();
     $('#infoAboutDistance').show();
@@ -94,6 +115,8 @@ function keepCheckingPosition()
 
 function cancelChoose() {
     clearInterval(checkPosition);
+    _controlHub.invoke("RemoveParentOnWay", _parentName);
+
     $('#externalMap').hide();
     $('#cancel').hide();
     $('#infoAboutDistance').hide();

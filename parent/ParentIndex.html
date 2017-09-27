@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>School area</title>
+    <meta charset="utf-8">
+
+    <script src="../js/SignalR-jsfiles/jquery-1.6.4.js"></script>
+    <script src="../js/SignalR-jsfiles/jquery.signalR-2.2.2.js"></script>
+    
+    <script src="../js/latlon-spherical.js"></script>
+    <script src="../js/dms.js"></script>
+    <script src="../js/school.js"></script>
+</head>
+<body>
+
+
+<div id="noParents">
+    Nenhum responsável a caminho.
+</div>
+<div id="divParentsOnWay" style="display:none;">
+    Segue abaixo a lista de responsáveis que estão a caminho.
+    <table border="1" id="students">
+        <tr>
+            <td align="center" colspan="3">Lista de alunos</td>
+        </tr>
+        <tr>
+            <td><strong>Nome</strong></td>
+            <td><strong>Nome do responsável</strong></td>
+            <td><strong>Distancia</strong></td>
+        </tr>
+        
+    </table>
+</div>
+</body>
+</html>
