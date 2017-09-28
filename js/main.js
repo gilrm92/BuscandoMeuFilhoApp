@@ -18,8 +18,17 @@ function connect() {
     _signalrConnection = $.hubConnection(checkersHubURL, {
         useDefaultPath: false
     });
-
     _controlHub = _signalrConnection.createHubProxy('ControlHub');
+    _controlHub.on("askDeliveryConfirmation", function (parentName) {
+        $('#cancel').prop('disabled', true);
+        if (confirm("Por favor, pressione Ok caso o(a) senhor(a) está retirando seu filho do colégio neste momento.")) {
+            cancelChoose();
+            _controlHub.invoke("DeliveryConfirmationResponse", true, parentName);
+        } else {
+            $('#cancel').prop('disabled', false);
+            _controlHub.invoke("DeliveryConfirmationResponse", false, parentName);
+        }
+    });
     _signalrConnection.start();
 }
 

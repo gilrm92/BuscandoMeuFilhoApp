@@ -10,5 +10,6 @@ namespace BuscandoMeuFilhoApp
         public string Name { get; set; }
         public string Distance { get; set; }
         public string StudentName { get; set; }
+        public string ConnectionId { get; set; }
     }
 }

@@ -27,6 +27,7 @@ namespace BuscandoMeuFilhoApp
             parentOnWay.Name = parentName;
             parentOnWay.Distance = distance;
             parentOnWay.StudentName = studentsName;
+            parentOnWay.ConnectionId = Context.ConnectionId;
 
             //Removing before shit happen.
             var parent = _parentsOnWay.FirstOrDefault(a => a.Name == parentName);
@@ -41,6 +42,23 @@ namespace BuscandoMeuFilhoApp
             var parent = _parentsOnWay.FirstOrDefault(a => a.Name == parentName);
             _parentsOnWay.Remove(parent);
             Clients.Client(_schoolConnectionId).getParentsOnWayCallback(_parentsOnWay);
+        }
+
+        public void DeliveryStudentToParent(string parentName)
+        {
+            var parentToDelivery = _parentsOnWay.FirstOrDefault(a => a.Name == parentName);
+            Clients.Client(parentToDelivery.ConnectionId).askDeliveryConfirmation(parentToDelivery.Name);
+        }
+
+        public void DeliveryConfirmationResponse(bool confirmation, string parentName)
+        {
+            if (confirmation)
+            {
+                var parent = _parentsOnWay.FirstOrDefault(a => a.Name == parentName);
+                _parentsOnWay.Remove(parent);
+            }
+
+            Clients.Client(_schoolConnectionId).deliveryConfirmationCallback(confirmation, parentName);
         }
     }
 }

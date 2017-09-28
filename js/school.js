@@ -1,3 +1,4 @@
+var _listOfDisableds = [];
 var _controlHub;
 var _signalrConnection;
 
@@ -19,6 +20,20 @@ function connect() {
     _controlHub.on("getParentsOnWayCallback", function (parentsOnWay) {
         displayOnTable(parentsOnWay);
     });
+
+    _controlHub.on("deliveryConfirmationCallback", function (confirmation, parentName) {
+        if (confirmation) {
+            alert('Aluno entregue!');
+        }
+        else {
+            alert('Ops! O responsável informou que ainda está a caminho para buscar a criança!');
+        }
+        //Removing from list
+        _listOfDisableds = jQuery.grep(_listOfDisableds, function (value) {
+            return value != parentName;
+        });
+    });
+    
 
     _signalrConnection.start().done(function () { _controlHub.invoke("RegisterSchoolConnection"); });
 }
@@ -45,6 +60,16 @@ function displayOnTable(parentsOnway) {
         var tdDistance = $('<td>' + parentsOnway[i].Distance + '</td>');
         tr.append(tdDistance);
 
+        var disabled = "";
+        if ($.inArray(parentsOnway[i].Name, _listOfDisableds) != -1)
+        {
+            disabled = "disabled='disabled'";
+        }
+
+        var tdButton = $('<td> <input type="button" ' + disabled + ' id="' + parentsOnway[i].Name + '" value="Entregar aluno" onclick="deliveryStudent(\'' + parentsOnway[i].Name + '\')" /> </td>');
+        console.log(tdButton);
+        tr.append(tdButton);
+
         $('#students').append(tr);
     }
 
@@ -55,4 +80,11 @@ function setNonParentsComming()
 {
     $('#noParents').show();
     $('#divParentsOnWay').hide();
+}
+
+function deliveryStudent(parentName)
+{
+    $('#' + parentName).prop('disabled', true);
+    _listOfDisableds.push(parentName);
+    _controlHub.invoke("DeliveryStudentToParent", parentName);
 }
